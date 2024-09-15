@@ -11,3 +11,15 @@ body {
     height: 100%;
     margin: 1em;
 }
+
+.temps {
+    display: grid;
+    grid-template-rows: 0.5fr 1fr;
+    grid-template-columns: repeat(15, 1fr);
+    grid-column-gap: 1em;
+}
+
+.day-title {
+    grid-row: 1;
+    font-weight: bold;
+}

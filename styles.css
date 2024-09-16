@@ -14,7 +14,7 @@ body {
 
 .temps {
     display: grid;
-    grid-template-rows: 0.5fr 1fr;
+    grid-template-rows: 0.5fr 3fr 1fr 1fr;
     grid-template-columns: repeat(15, 1fr);
     grid-column-gap: 1em;
 }
@@ -22,4 +22,28 @@ body {
 .day-title {
     grid-row: 1;
     font-weight: bold;
+}
+
+.img {
+    grid-row: 2;
+}
+
+.inputDays {
+    grid-row: 3;
+}
+
+.precip {
+    grid-row: 4;
+}
+
+.current-temperature {
+    font-size: 3.5em;
+    text-align: center;
+}
+
+.current {
+    height: 50%;
+}
+.current h3 {
+    text-align: center;
 }

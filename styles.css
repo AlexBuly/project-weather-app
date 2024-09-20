@@ -7,6 +7,10 @@ body {
     margin: 0;
 }
 
+.cityName {
+    text-align: center;
+}
+
 .container {
     height: 100%;
     margin: 1em;
@@ -14,7 +18,7 @@ body {
 
 .temps {
     display: grid;
-    grid-template-rows: 0.5fr 3fr 1fr 1fr;
+    grid-template-rows: 0.5fr 1.5fr 1fr 1fr 1fr;
     grid-template-columns: repeat(15, 1fr);
     grid-column-gap: 1em;
 }
@@ -22,18 +26,36 @@ body {
 .day-title {
     grid-row: 1;
     font-weight: bold;
+    text-align: center;
+}
+
+.weather-img {
+    grid-row: 2;
+    height: 3.5em;
+}
+
+.img-element {
+    height: 20em;
+}
+
+.curr-img {
+    height: 15em;
+}
+
+.curr-data {
+    justify-content: left;
 }
 
 .img {
-    grid-row: 2;
-}
-
-.inputDays {
     grid-row: 3;
 }
 
-.precip {
+.inputDays {
     grid-row: 4;
+}
+
+.precip {
+    grid-row: 5;
 }
 
 .current-temperature {
@@ -42,8 +64,45 @@ body {
 }
 
 .current {
-    height: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 50%; 
+    color: white;
 }
-.current h3 {
+
+.current h3, .current-description {
     text-align: center;
+}
+
+.info {
+    display: flex;
+    justify-content: space-around;
+}
+
+.degrees {
+    justify-content: end;
+    display: none;
+}
+
+.f {
+    border-radius: 0;
+    border: 1px solid black;
+    color: white;
+    background-color: black;
+}
+
+.c {
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.f, .c {
+    font-size: 1em;
+}
+
+button {
+    cursor: pointer;
 }

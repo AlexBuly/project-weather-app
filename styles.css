@@ -16,11 +16,18 @@ body {
     margin: 1em;
 }
 
+.data-container {
+    display: flex;
+}
+
 .temps {
-    display: grid;
-    grid-template-rows: 0.5fr 1.5fr 1fr 1fr 1fr;
-    grid-template-columns: repeat(15, 1fr);
-    grid-column-gap: 1em;
+    display: flex;
+    margin: 1em;
+    gap: 1em;
+}
+
+.outer-days {
+    border: 1px solid black;
 }
 
 .day-title {

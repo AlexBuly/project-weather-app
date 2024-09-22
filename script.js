@@ -79,9 +79,18 @@ function data() {
                 const precip = data.days[i].precip;
                 arrDays = [];
 
+                const outerDays = document.createElement("div");
+                outerDays.classList.add("outer-days");
+                inputs.appendChild(outerDays);
+
+                const dayTitle = document.createElement("div");
+                dayTitle.classList.add("day-title");
+                dayTitle.textContent = `${data.days[i].datetime}: `;
+                outerDays.appendChild(dayTitle);
+
                 const image = document.createElement("img");
                 image.classList.add("weather-img");
-                inputs.appendChild(image);
+                outerDays.appendChild(image);
 
                 if (data.days[i].conditions === "Clear") {
                     image.src = "images/sunny.jpg";
@@ -94,14 +103,11 @@ function data() {
                 } else if (data.days[i].conditions.includes("Snow")) {
                     image.src = "images/snow.jpg";
                 }
-                
+
                 const img = document.createElement("div");
                 img.classList.add("days-description");
                 img.textContent = data.days[i].conditions;
-                inputs.appendChild(img);
-
-                const dayTitle = document.createElement("div");
-                dayTitle.classList.add("day-title");
+                outerDays.appendChild(img);
                 
                 const minMax = document.createElement("div");
                 minMax.classList.add("inputDays");
@@ -109,11 +115,9 @@ function data() {
                 const percipitation = document.createElement("div");
                 percipitation.classList.add("precip");
                 
-                inputs.appendChild(dayTitle);
-                inputs.appendChild(minMax);
-                inputs.appendChild(percipitation);
+                outerDays.appendChild(minMax);
+                outerDays.appendChild(percipitation);
                 
-                dayTitle.textContent = `${data.days[i].datetime}: `
         
                 arrDays.push(tempMax);
                 arrDays.push(tempMin);

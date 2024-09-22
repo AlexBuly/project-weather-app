@@ -11,8 +11,12 @@ body {
     text-align: center;
 }
 
+.data {
+    width: 50%;
+}
+
 .container {
-    height: 100%;
+    /*height: 100%;*/
     margin: 1em;
 }
 
@@ -70,11 +74,24 @@ body {
     text-align: center;
 }
 
-.current {
+.data {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: 50%; 
+    width: 50%;
+}
+
+.moreInfo {
+    background-color: rgb(118, 176, 223);
+    width: 50%;
+    display: none;
+}
+
+.current {
+    width: 100%; 
     color: white;
+    display: flex;
+    gap: 1em;
+    justify-content: center;
 }
 
 .current h3, .current-description {

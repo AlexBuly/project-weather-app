@@ -1,3 +1,69 @@
+//import {domElements } from "./domElements";
+
+function domElements() {
+    const currImageElement = (curImage, append, condition) => {
+        curImage = document.createElement("img");
+        curImage.classList.add("img-element");
+        append.appendChild(curImage);
+
+        const weatherImages = {
+            "Clear": "images/sunny.jpg",
+            "Partially cloudy": "images/partly cloudy.jpg",
+            "Rain": "images/Rain.jpg",
+            "Overcast": "images/cloudy.jpg",
+            "Snow": "images/snow.jpg"
+        };
+
+        curImage.src = weatherImages[condition];
+    }
+
+    const currTempElement = (currTemp, append, condition) => {
+        currTemp = document.createElement("h1");
+        currTemp.classList.add("current-temperature");
+        currTemp.textContent = condition;
+        append.appendChild(currTemp);
+    }
+
+    const currConditionElement = (currConditions, append, condition) => {
+        currConditions = document.createElement("h2");
+        currConditions.classList.add("current-description");
+        currConditions.textContent = condition;
+        append.appendChild(currConditions);
+
+    }
+
+    const precipElement = (currPrecip, append, condition) => {
+        currPrecip = document.createElement("div");
+        currPrecip.classList.add("current-precipitation");
+        currPrecip.textContent = `Rain: ${condition}%`;
+        append.appendChild(currPrecip);
+    }
+
+    const feelsLikeElement = (feelsLike, append, condition) => {
+        feelsLike = document.createElement("div");
+        feelsLike.classList.add("feels-like");
+        feelsLike.textContent = `Feels Like: ${condition}`;
+        append.appendChild(feelsLike);
+
+    }
+
+    const humidityElement = (humidity, append, condition) => {
+        humidity = document.createElement("div");
+        humidity.classList.add("humidity");
+        humidity.textContent = `Humidity: ${condition}`;
+        append.appendChild(humidity);
+    }
+
+    return {
+            currImageElement, 
+            currTempElement, 
+            currConditionElement,
+            precipElement,
+            feelsLikeElement,
+            humidityElement
+        }
+}
+
 // Fetch from API
 function data() {
     const cityInput = document.querySelector("#city");
@@ -5,7 +71,8 @@ function data() {
     const dataContainer = document.querySelector(".data-container");
     const name = document.querySelector(".cityName");
     const current = document.querySelector(".current");
-    const currentH3 = document.querySelector(".current h3")
+    const dataCurrent = document.querySelector(".data");
+    const currentH3 = document.querySelector(".titleH3")
     const currrentCon = document.querySelector(".current-conditions");
     const degrees = document.querySelector(".degrees");
     const currData = document.querySelector(".curr-data");
@@ -16,6 +83,10 @@ function data() {
             const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${cityName}?unitGroup=us&key=8A45R9EG9FAGY786X8WCEGF8M&contentType=json`, {mode: 'cors'});
             const data = await response.json();
             console.log(data);
+
+            const { conditions, temp, precip, feelslike, humidity  } = data.currentConditions;
+
+            const DOM = domElements();
     
             let inputs;
             let arrDays = [];
@@ -24,53 +95,19 @@ function data() {
             dataContainer.appendChild(inputs);
             degrees.style.display = "flex";
 
-            current.style.backgroundColor = "rgb(118, 176, 223)";
-
-            const imgElement = document.createElement("img");
-            imgElement.classList.add("img-element");
-            currImage.appendChild(imgElement);
-
-            // current 
-            let currTemp = document.createElement("h1");
-            currTemp.classList.add("current-temperature");
-            currrentCon.appendChild(currTemp);
-            currTemp.textContent = data.currentConditions.temp;
-
-            let currConditions = document.createElement("h2");
-            currConditions.classList.add("current-description");
-            currConditions.textContent = data.currentConditions.conditions;
-            currrentCon.appendChild(currConditions);
-
-            if (data.currentConditions.conditions === "Clear") {
-                imgElement.src = "images/sunny.jpg";
-            } else if (data.currentConditions.conditions === "Partially cloudy") {
-                imgElement.src = "images/partly cloudy.jpg";
-            } else if (data.currentConditions.conditions === "Rain") {
-                imgElement.src = "images/Rain.jpg";
-            } else if (data.currentConditions.conditions === "Overcast") {
-                imgElement.src = "images/cloudy.jpg";
-            } else if (data.currentConditions.conditions === "Snow") {
-                imgElement.src = "images/snow.jpg";
-            }
+            dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
+            
+           DOM.currImageElement(null, currImage, conditions);
+           DOM.currTempElement(null, currrentCon, temp);
+           DOM.currConditionElement(null, currrentCon, conditions);
 
             const currInfo = document.createElement("div");
             currInfo.classList.add("info");
             currrentCon.appendChild(currInfo);
 
-            let currPrecip = document.createElement("div");
-            currPrecip.classList.add("current-precipitation");
-            currPrecip.textContent = `Rain: ${data.currentConditions.precip}%`;
-            currInfo.appendChild(currPrecip);
-
-            let feelsLike = document.createElement("div");
-            feelsLike.classList.add("feels-like");
-            feelsLike.textContent = `Feels Like: ${data.currentConditions.feelslike}`;
-            currInfo.appendChild(feelsLike);
-
-            let humidity = document.createElement("div");
-            humidity.classList.add("humidity");
-            humidity.textContent = `Humidity: ${data.currentConditions.humidity}`;
-            currInfo.appendChild(humidity);
+            DOM.precipElement(null, currInfo, precip);
+            DOM.feelsLikeElement(null, currInfo, feelslike);
+            DOM.humidityElement(null, currInfo, humidity);
             
             // Bottom cards 
             for (let i = 0; i < data.days.length; i++)  {
@@ -114,9 +151,19 @@ function data() {
     
                 const percipitation = document.createElement("div");
                 percipitation.classList.add("precip");
+
+                const btn = document.createElement("button");
+                btn.textContent = "More";
+
+                const more = document.querySelector(".moreInfo");
+
+                btn.addEventListener("click", () => {
+                    more.style.display = "block";
+                })
                 
                 outerDays.appendChild(minMax);
                 outerDays.appendChild(percipitation);
+                outerDays.appendChild(btn);
                 
         
                 arrDays.push(tempMax);

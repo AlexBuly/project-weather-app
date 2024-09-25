@@ -1,9 +1,9 @@
 //import {domElements } from "./domElements";
 
 function domElements() {
-    const currImageElement = (curImage, append, condition) => {
+    const currImageElement = (curImage, append, className, condition) => {
         curImage = document.createElement("img");
-        curImage.classList.add("img-element");
+        curImage.classList.add(className);
         append.appendChild(curImage);
 
         const weatherImages = {
@@ -17,10 +17,21 @@ function domElements() {
         curImage.src = weatherImages[condition];
     }
 
+    const weatherConditions = (image, condition) => {
+        const weatherImages = {
+            "Clear": "images/sunny.jpg",
+            "Partially cloudy": "images/partly cloudy.jpg",
+            "Rain": "images/Rain.jpg",
+            "Overcast": "images/cloudy.jpg",
+            "Snow": "images/snow.jpg"
+        };
+        image.src = weatherImages[condition];
+    }   
+
     const currTempElement = (currTemp, append, condition) => {
         currTemp = document.createElement("h1");
         currTemp.classList.add("current-temperature");
-        currTemp.textContent = condition;
+        currTemp.textContent = `${condition}°F`;
         append.appendChild(currTemp);
     }
 
@@ -60,7 +71,8 @@ function domElements() {
             currConditionElement,
             precipElement,
             feelsLikeElement,
-            humidityElement
+            humidityElement,
+            weatherConditions
         }
 }
 
@@ -77,6 +89,15 @@ function data() {
     const degrees = document.querySelector(".degrees");
     const currData = document.querySelector(".curr-data");
     const currImage = document.querySelector(".curr-image");
+    const high = document.querySelector(".high");
+    const low = document.querySelector(".low");
+    const more = document.querySelector(".moreInfo");
+    const rightImg = document.querySelector(".rightImage");
+    const descript = document.querySelector(".des");
+    const humidityDays = document.querySelector(".humidity");
+    const precipprobDays = document.querySelector(".precip");
+    const sunRise = document.querySelector(".sunrise");
+    const sunSet = document.querySelector(".sunset");
 
     async function fetchWeather(cityName) {
         try {
@@ -84,12 +105,11 @@ function data() {
             const data = await response.json();
             console.log(data);
 
-            const { conditions, temp, precip, feelslike, humidity  } = data.currentConditions;
+            const { conditions, temp, precipprob, feelslike, humidity  } = data.currentConditions;
 
             const DOM = domElements();
     
             let inputs;
-            let arrDays = [];
             inputs = document.createElement("div");
             inputs.classList.add("temps");
             dataContainer.appendChild(inputs);
@@ -97,7 +117,7 @@ function data() {
 
             dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
             
-           DOM.currImageElement(null, currImage, conditions);
+           DOM.currImageElement(null, currImage, "img-element", conditions);
            DOM.currTempElement(null, currrentCon, temp);
            DOM.currConditionElement(null, currrentCon, conditions);
 
@@ -105,81 +125,111 @@ function data() {
             currInfo.classList.add("info");
             currrentCon.appendChild(currInfo);
 
-            DOM.precipElement(null, currInfo, precip);
+            DOM.precipElement(null, currInfo, precipprob);
             DOM.feelsLikeElement(null, currInfo, feelslike);
             DOM.humidityElement(null, currInfo, humidity);
-            
-            // Bottom cards 
-            for (let i = 0; i < data.days.length; i++)  {
-                const tempMax = data.days[i].tempmax;
-                const tempMin = data.days[i].tempmin;
-                const precip = data.days[i].precip;
-                arrDays = [];
 
-                const outerDays = document.createElement("div");
-                outerDays.classList.add("outer-days");
-                inputs.appendChild(outerDays);
+            displayForcast(data.days, inputs, name, currentH3,  data.resolvedAddress, DOM);
 
-                const dayTitle = document.createElement("div");
-                dayTitle.classList.add("day-title");
-                dayTitle.textContent = `${data.days[i].datetime}: `;
-                outerDays.appendChild(dayTitle);
-
-                const image = document.createElement("img");
-                image.classList.add("weather-img");
-                outerDays.appendChild(image);
-
-                if (data.days[i].conditions === "Clear") {
-                    image.src = "images/sunny.jpg";
-                } else if (data.days[i].conditions === "Partially cloudy") {
-                    image.src = "images/partly cloudy.jpg";
-                } else if (data.days[i].conditions.includes("Rain")) {
-                    image.src = "images/Rain.jpg";
-                } else if (data.days[i].conditions === "Overcast") {
-                    image.src = "images/cloudy.jpg";
-                } else if (data.days[i].conditions.includes("Snow")) {
-                    image.src = "images/snow.jpg";
-                }
-
-                const img = document.createElement("div");
-                img.classList.add("days-description");
-                img.textContent = data.days[i].conditions;
-                outerDays.appendChild(img);
-                
-                const minMax = document.createElement("div");
-                minMax.classList.add("inputDays");
-    
-                const percipitation = document.createElement("div");
-                percipitation.classList.add("precip");
-
-                const btn = document.createElement("button");
-                btn.textContent = "More";
-
-                const more = document.querySelector(".moreInfo");
-
-                btn.addEventListener("click", () => {
-                    more.style.display = "block";
-                })
-                
-                outerDays.appendChild(minMax);
-                outerDays.appendChild(percipitation);
-                outerDays.appendChild(btn);
-                
-        
-                arrDays.push(tempMax);
-                arrDays.push(tempMin);
-    
-                // Display to page 
-                minMax.textContent = ` High: ${tempMax} \n Low: ${tempMin}`;
-                percipitation.textContent = `Rain: ${precip}%`;
-                name.textContent = data.resolvedAddress;
-                currentH3.textContent = "Current";
-            }  
         } catch(err) {
             name.textContent = `Error fetching '${cityName}' ${err}`;
         }
-        
-    } 
+    }
+
+        const displayForcast = (days, container, name, currentH3, city, DOM) => {
+            let arrDays = [];
+            days.forEach(day => {
+                const outerDays = document.createElement("div");
+                outerDays.classList.add("outer-days");
+                container.appendChild(outerDays);
+                
+                const dayData = document.createElement("div");
+                dayData.classList.add("day-data");
+                outerDays.appendChild(dayData);
+
+                const dayTitle = document.createElement("div");
+                dayTitle.classList.add("day-title");
+                dayTitle.textContent = `${day.datetime}: `;
+                dayData.appendChild(dayTitle);
+
+
+                const condition = day.conditions.includes("Rain") ? "Rain" : day.conditions;
+                DOM.currImageElement(null, dayData,"weather-img", condition);
+
+                const description = document.createElement("div");
+                description.classList.add("days-description");
+                description.textContent = day.conditions;
+                dayData.appendChild(description);
+                
+                const minMax = document.createElement("div");
+                minMax.classList.add("inputDays");
+                minMax.textContent = ` High: ${day.tempmax} \n Low: ${day.tempmin}`;
+                dayData.appendChild(minMax);
+    
+                const precipitation = document.createElement("div");
+                precipitation.classList.add("precip");
+                precipitation.textContent = `Rain: ${day.precip}%`;
+                dayData.appendChild(precipitation);
+
+                const btn = document.createElement("button");
+                btn.textContent = "More";
+                outerDays.appendChild(btn); 
+
+                const dailyHours = document.createElement("div");
+                dailyHours.classList.add("hours-section");
+                outerDays.appendChild(dailyHours);
+                dailyHours.style.display = "none";
+
+                const hours = document.createElement("button");
+                hours.textContent = "Hourly";
+                outerDays.appendChild(hours);
+
+                const daily = document.createElement("button");
+                daily.classList.add("back-to-day");
+                daily.textContent = "Daily";
+                outerDays.appendChild(daily);
+
+                daily.addEventListener("click", () => {
+                    dayData.style.display = "block";
+                    dailyHours.style.display = "none";
+                });
+
+                hours.addEventListener("click",() => {
+                    dayData.style.display = "none";
+                    dailyHours.style.display = "block"; 
+
+                    const hoursTitle = document.createElement("div");
+                    hoursTitle.classList.add("hours-title");
+                    hoursTitle.textContent = "Hourly";
+                    dailyHours.appendChild(hoursTitle);
+
+                    day.hours.forEach(hour => {
+                        const hoursText = document.createElement("div");
+                        hoursText.classList.add("hours-text");
+                        hoursText.textContent = `${hour.datetime}: ${hour.temp}`;
+                        dailyHours.appendChild(hoursText);
+                    });
+                })
+
+                btn.addEventListener("click", () => {
+                    DOM.weatherConditions(rightImg, condition);
+                    more.style.display = "grid";
+                    more.style.gridTemplateColumns = "1fr 1fr 1fr";
+                    high.textContent = `High: ${day.tempmax}`;
+                    low.textContent = `Low: ${day.tempmin}`;
+                    descript.textContent = `Description: ${day.description}`;
+                    humidityDays.textContent = `Humidity: ${day.humidity}%`;
+                    precipprobDays.textContent = `Rain: ${day.precipprob}%`;
+                    sunRise.textContent = `Sunrise: ${day.sunrise}`;
+                    sunSet.textContent = `Sunset: ${day.sunset}`;      
+                });
+
+                arrDays.push(day.tempmax, day.tempmin);
+
+                name.textContent = city;
+                currentH3.textContent = "Current";
+            });
+        }         
 
     const deleteChild = (container) => {
         let child = container.firstElementChild;
@@ -195,7 +245,7 @@ function data() {
         if (searchTerm) {
             deleteChild(currImage);
             deleteChild(dataContainer);
-            deleteChild(currrentCon);
+            deleteChild(currrentCon);;
             fetchWeather(searchTerm);
         }
     })

@@ -49,6 +49,10 @@ body {
     height: 20em;
 }
 
+.rightImage {
+    height: 15em;
+}
+
 .curr-img {
     height: 15em;
 }

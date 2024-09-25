@@ -224,6 +224,12 @@ function data() {
                     sunSet.textContent = `Sunset: ${day.sunset}`;      
                 });
 
+                const close = document.querySelector(".close"); 
+
+                close.addEventListener("click", () => {
+                    more.remove();
+                });
+
                 arrDays.push(day.tempmax, day.tempmin);
 
                 name.textContent = city;

@@ -90,6 +90,10 @@ body {
     display: none;
 }
 
+.close {
+    grid-column: -1;
+}
+
 .current {
     width: 100%; 
     color: white;

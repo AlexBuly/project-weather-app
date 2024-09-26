@@ -7,7 +7,7 @@ body {
     margin: 0;
 }
 
-.cityName {
+.cityName, .titleH3 {
     text-align: center;
 }
 
@@ -129,6 +129,7 @@ body {
     border-top: 1px solid black;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
+    background-color: lightgray;
 }
 
 .f, .c {

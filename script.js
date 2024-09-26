@@ -28,10 +28,11 @@ function domElements() {
         image.src = weatherImages[condition];
     }   
 
-    const currTempElement = (currTemp, append, condition) => {
+    const currTempElement = (currTemp, append, condition, degreeType) => {
         currTemp = document.createElement("h1");
         currTemp.classList.add("current-temperature");
-        currTemp.textContent = `${condition}°F`;
+        const unit = degreeType === "us" ? "°F" : "°C"
+        currTemp.textContent = `${condition}${unit}`;
         append.appendChild(currTemp);
     }
 
@@ -98,10 +99,13 @@ function data() {
     const precipprobDays = document.querySelector(".precip");
     const sunRise = document.querySelector(".sunrise");
     const sunSet = document.querySelector(".sunset");
+    const fahrenheitBtn = document.querySelector(".f"); 
+    const celsiusBtn = document.querySelector(".c");
+    let currentDegreeType = "us";
 
-    async function fetchWeather(cityName) {
+    async function fetchWeather(cityName, degree) {
         try {
-            const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${cityName}?unitGroup=us&key=8A45R9EG9FAGY786X8WCEGF8M&contentType=json`, {mode: 'cors'});
+            const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${cityName}?unitGroup=${degree}&key=8A45R9EG9FAGY786X8WCEGF8M&contentType=json`, {mode: 'cors'});
             const data = await response.json();
             console.log(data);
 
@@ -116,9 +120,10 @@ function data() {
             degrees.style.display = "flex";
 
             dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
+
             
            DOM.currImageElement(null, currImage, "img-element", conditions);
-           DOM.currTempElement(null, currrentCon, temp);
+           DOM.currTempElement(null, currrentCon, temp, currentDegreeType);
            DOM.currConditionElement(null, currrentCon, conditions);
 
             const currInfo = document.createElement("div");
@@ -135,6 +140,17 @@ function data() {
             name.textContent = `Error fetching '${cityName}' ${err}`;
         }
     }
+
+    const changeDegreeType = (degree) => {
+        currentDegreeType = degree;
+        const searchTerm = cityInput.value.trim();
+        if (searchTerm) {
+            fetchWeather(searchTerm, currentDegreeType);
+            deleteChild(currImage);
+            deleteChild(dataContainer);
+            deleteChild(currrentCon);
+    }
+}
 
         const displayForcast = (days, container, name, currentH3, city, DOM) => {
             let arrDays = [];
@@ -194,11 +210,7 @@ function data() {
                     dailyHours.style.display = "none";
                 });
 
-                hours.addEventListener("click",() => {
-                    dayData.style.display = "none";
-                    dailyHours.style.display = "block"; 
-
-                    const hoursTitle = document.createElement("div");
+                const hoursTitle = document.createElement("div");
                     hoursTitle.classList.add("hours-title");
                     hoursTitle.textContent = "Hourly";
                     dailyHours.appendChild(hoursTitle);
@@ -209,6 +221,10 @@ function data() {
                         hoursText.textContent = `${hour.datetime}: ${hour.temp}`;
                         dailyHours.appendChild(hoursText);
                     });
+
+                hours.addEventListener("click",() => {
+                    dayData.style.display = "none";
+                    dailyHours.style.display = "block"; 
                 })
 
                 btn.addEventListener("click", () => {
@@ -227,7 +243,7 @@ function data() {
                 const close = document.querySelector(".close"); 
 
                 close.addEventListener("click", () => {
-                    more.remove();
+                    more.style.display = "none";
                 });
 
                 arrDays.push(day.tempmax, day.tempmin);
@@ -252,26 +268,29 @@ function data() {
             deleteChild(currImage);
             deleteChild(dataContainer);
             deleteChild(currrentCon);;
-            fetchWeather(searchTerm);
+            fetchWeather(searchTerm, currentDegreeType);
         }
+    });
+
+    fahrenheitBtn.addEventListener("click", () => {
+        changeDegreeType("us");
+        celsiusBtn.style.backgroundColor = "lightgray";
+        celsiusBtn.style.color = "black";
+        fahrenheitBtn.style.backgroundColor = "black";
+        fahrenheitBtn.style.color = "white";
     })
+    celsiusBtn.addEventListener("click", () => {
+        changeDegreeType("uk");
+        celsiusBtn.style.backgroundColor = "black";
+        celsiusBtn.style.color = "white";
+        fahrenheitBtn.style.backgroundColor = "lightgray";
+        fahrenheitBtn.style.color = "black";
+    });
+    
 
 
     return {fetchWeather} 
 }
-// async function fetchWeather() {
-//     const response = await fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Huntington?unitGroup=us&elements=datetime%2Ctempmax%2Ctempmin%2Ctemp%2Cfeelslike%2Chumidity%2Cprecip%2Ccloudcover&include=days%2Ccurrent&key=8A45R9EG9FAGY786X8WCEGF8M&contentType=json');
-//     const data = await response.json();
-//     console.log(data);
-
-//     // Narrow down to access specific attributes 
-//     for (let i = 0; i < data.days.length; i++)  {
-//         const clouds = data.days[i].cloudcover;
-//         console.log(clouds);
-//         //if (clouds < 7 ) console.log("Value " + clouds);
-//     }
-// }
-//fetchWeather();
 
 const myData = data();
 

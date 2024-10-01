@@ -122,7 +122,8 @@ function data() {
             dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
 
             
-           DOM.currImageElement(null, currImage, "img-element", conditions);
+            const condition = conditions.includes("Rain") ? "Rain" : conditions;
+           DOM.currImageElement(null, currImage, "img-element", condition);
            DOM.currTempElement(null, currrentCon, temp, currentDegreeType);
            DOM.currConditionElement(null, currrentCon, conditions);
 
@@ -206,7 +207,7 @@ function data() {
                 outerDays.appendChild(daily);
 
                 daily.addEventListener("click", () => {
-                    dayData.style.display = "block";
+                    dayData.style.display = "grid";
                     dailyHours.style.display = "none";
                 });
 
@@ -224,7 +225,9 @@ function data() {
 
                 hours.addEventListener("click",() => {
                     dayData.style.display = "none";
-                    dailyHours.style.display = "block"; 
+                    dailyHours.style.display = "grid";
+                    dailyHours.style.gap = "0.5em";
+                     
                 })
 
                 btn.addEventListener("click", () => {

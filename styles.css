@@ -19,7 +19,6 @@ body {
     width: 50%;
     min-width: 500px;
 }
-
 .container {
     /*height: 100%;*/
     margin: 1em;
@@ -88,8 +87,6 @@ body {
     grid-row: 3;
 }
 
-.current-c
-
 .inputDays {
     grid-row: 4;
 }
@@ -98,25 +95,41 @@ body {
     grid-row: 5;
 }
 
+.content {
+    font-size: large;
+    padding: 1em;
+}
+
 .current-temperature {
     font-size: 3.5em;
     text-align: center;
 }
 
-.data {
+.img-content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    width: 50%;
+    background-color: rgb(118, 176, 223);
 }
 
-.moreInfo {
+.more-content {
     background-color: rgb(118, 176, 223);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.more-title h3 {
+    color: black;
+}
+
+
+.moreInfo {
     width: 50%;
     display: none;
 }
 
-.close {
+.close-container {
     grid-column: -1;
+    grid-row: 1;
 }
 
 .current {

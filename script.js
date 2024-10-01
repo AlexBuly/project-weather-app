@@ -119,7 +119,7 @@ function data() {
             dataContainer.appendChild(inputs);
             degrees.style.display = "flex";
 
-            dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
+            //dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
 
             
             const condition = conditions.includes("Rain") ? "Rain" : conditions;
@@ -232,8 +232,8 @@ function data() {
 
                 btn.addEventListener("click", () => {
                     DOM.weatherConditions(rightImg, condition);
-                    more.style.display = "grid";
-                    more.style.gridTemplateColumns = "1fr 1fr 1fr";
+                    more.style.display = "block";
+                    //more.style.gridTemplateColumns = "1fr 1fr 1fr";
                     high.textContent = `High: ${day.tempmax}`;
                     low.textContent = `Low: ${day.tempmin}`;
                     descript.textContent = `Description: ${day.description}`;

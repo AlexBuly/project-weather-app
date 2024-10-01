@@ -268,6 +268,7 @@ function data() {
     citySubmit.addEventListener("click", () => {
         const searchTerm = cityInput.value.trim();
         if (searchTerm) {
+            more.style.display = "none";
             deleteChild(currImage);
             deleteChild(dataContainer);
             deleteChild(currrentCon);;

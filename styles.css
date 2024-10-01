@@ -125,6 +125,7 @@ body {
 .moreInfo {
     width: 50%;
     display: none;
+    min-width: 500px;
 }
 
 .close-container {
@@ -179,5 +180,11 @@ button {
     background-color: darkgrey;
     border: 1px solid white;
     border-radius: 1em;
+}
+
+@media  screen and (max-width: 700px) {
+    .current {
+        display: block;
+    }
 }
 

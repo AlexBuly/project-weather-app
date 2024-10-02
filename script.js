@@ -118,9 +118,6 @@ function data() {
             inputs.classList.add("temps");
             dataContainer.appendChild(inputs);
             degrees.style.display = "flex";
-
-            //dataCurrent.style.backgroundColor = "rgb(118, 176, 223)";
-
             
             const condition = conditions.includes("Rain") ? "Rain" : conditions;
            DOM.currImageElement(null, currImage, "img-element", condition);
@@ -185,12 +182,17 @@ function data() {
     
                 const precipitation = document.createElement("div");
                 precipitation.classList.add("precip");
-                precipitation.textContent = `Rain: ${day.precip}%`;
+                precipitation.textContent = `Rain: ${day.precipprob}%`;
                 dayData.appendChild(precipitation);
 
-                const btn = document.createElement("button");
-                btn.textContent = "More";
-                outerDays.appendChild(btn); 
+                const eventBtns = document.createElement("div");
+                eventBtns.classList.add("buttons");
+                outerDays.appendChild(eventBtns);
+
+                const moreBtn = document.createElement("button");
+                moreBtn.classList.add("more-btn");
+                moreBtn.textContent = "More";
+                eventBtns.appendChild(moreBtn); 
 
                 const dailyHours = document.createElement("div");
                 dailyHours.classList.add("hours-section");
@@ -198,13 +200,14 @@ function data() {
                 dailyHours.style.display = "none";
 
                 const hours = document.createElement("button");
+                hours.classList.add("hours-btn");
                 hours.textContent = "Hourly";
-                outerDays.appendChild(hours);
+                eventBtns.appendChild(hours);
 
                 const daily = document.createElement("button");
                 daily.classList.add("back-to-day");
                 daily.textContent = "Daily";
-                outerDays.appendChild(daily);
+                eventBtns.appendChild(daily);
 
                 daily.addEventListener("click", () => {
                     dayData.style.display = "grid";
@@ -230,10 +233,9 @@ function data() {
                      
                 })
 
-                btn.addEventListener("click", () => {
+                moreBtn.addEventListener("click", () => {
                     DOM.weatherConditions(rightImg, condition);
                     more.style.display = "block";
-                    //more.style.gridTemplateColumns = "1fr 1fr 1fr";
                     high.textContent = `High: ${day.tempmax}`;
                     low.textContent = `Low: ${day.tempmin}`;
                     descript.textContent = `Description: ${day.description}`;

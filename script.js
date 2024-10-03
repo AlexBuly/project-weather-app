@@ -1,5 +1,4 @@
-//import {domElements } from "./domElements";
-
+// Elements related to current conditions 
 function domElements() {
     const currImageElement = (curImage, append, className, condition) => {
         curImage = document.createElement("img");
@@ -16,17 +15,6 @@ function domElements() {
 
         curImage.src = weatherImages[condition];
     }
-
-    const weatherConditions = (image, condition) => {
-        const weatherImages = {
-            "Clear": "images/sunny.jpg",
-            "Partially cloudy": "images/partly cloudy.jpg",
-            "Rain": "images/Rain.jpg",
-            "Overcast": "images/cloudy.jpg",
-            "Snow": "images/snow.jpg"
-        };
-        image.src = weatherImages[condition];
-    }   
 
     const currTempElement = (currTemp, append, condition, degreeType) => {
         currTemp = document.createElement("h1");
@@ -72,28 +60,23 @@ function domElements() {
             currConditionElement,
             precipElement,
             feelsLikeElement,
-            humidityElement,
-            weatherConditions
+            humidityElement
         }
 }
 
-// Fetch from API
+
 function data() {
     const cityInput = document.querySelector("#city");
     const citySubmit = document.querySelector("#city-submit");
     const dataContainer = document.querySelector(".data-container");
     const name = document.querySelector(".cityName");
-    const current = document.querySelector(".current");
-    const dataCurrent = document.querySelector(".data");
     const currentH3 = document.querySelector(".titleH3")
     const currrentCon = document.querySelector(".current-conditions");
     const degrees = document.querySelector(".degrees");
-    const currData = document.querySelector(".curr-data");
     const currImage = document.querySelector(".curr-image");
     const high = document.querySelector(".high");
     const low = document.querySelector(".low");
     const more = document.querySelector(".moreInfo");
-    const rightImg = document.querySelector(".rightImage");
     const descript = document.querySelector(".des");
     const humidityDays = document.querySelector(".humidity");
     const precipprobDays = document.querySelector(".precip");
@@ -101,13 +84,14 @@ function data() {
     const sunSet = document.querySelector(".sunset");
     const fahrenheitBtn = document.querySelector(".f"); 
     const celsiusBtn = document.querySelector(".c");
+    const imgMore = document.querySelector(".more-img-container");
     let currentDegreeType = "us";
 
+    // Fetch weather 
     async function fetchWeather(cityName, degree) {
         try {
             const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${cityName}?unitGroup=${degree}&key=8A45R9EG9FAGY786X8WCEGF8M&contentType=json`, {mode: 'cors'});
             const data = await response.json();
-            console.log(data);
 
             const { conditions, temp, precipprob, feelslike, humidity  } = data.currentConditions;
 
@@ -133,23 +117,23 @@ function data() {
             DOM.humidityElement(null, currInfo, humidity);
 
             displayForcast(data.days, inputs, name, currentH3,  data.resolvedAddress, DOM);
-
         } catch(err) {
             name.textContent = `Error fetching '${cityName}' ${err}`;
         }
     }
 
+    // Function to toggle degrees
     const changeDegreeType = (degree) => {
         currentDegreeType = degree;
         const searchTerm = cityInput.value.trim();
         if (searchTerm) {
-            fetchWeather(searchTerm, currentDegreeType);
             deleteChild(currImage);
             deleteChild(dataContainer);
             deleteChild(currrentCon);
+            fetchWeather(searchTerm, currentDegreeType);
     }
 }
-
+        // 15 day forcast card elements 
         const displayForcast = (days, container, name, currentH3, city, DOM) => {
             let arrDays = [];
             days.forEach(day => {
@@ -165,7 +149,6 @@ function data() {
                 dayTitle.classList.add("day-title");
                 dayTitle.textContent = `${day.datetime}: `;
                 dayData.appendChild(dayTitle);
-
 
                 const condition = day.conditions.includes("Rain") ? "Rain" : day.conditions;
                 DOM.currImageElement(null, dayData,"weather-img", condition);
@@ -209,6 +192,7 @@ function data() {
                 daily.textContent = "Daily";
                 eventBtns.appendChild(daily);
 
+                // Replaces hours with overall day 
                 daily.addEventListener("click", () => {
                     dayData.style.display = "grid";
                     dailyHours.style.display = "none";
@@ -226,15 +210,17 @@ function data() {
                         dailyHours.appendChild(hoursText);
                     });
 
+                // Replaces overall day with hourly temps 
                 hours.addEventListener("click",() => {
                     dayData.style.display = "none";
                     dailyHours.style.display = "grid";
                     dailyHours.style.gap = "0.5em";
                      
-                })
+                });
 
                 moreBtn.addEventListener("click", () => {
-                    DOM.weatherConditions(rightImg, condition);
+                    deleteChild(imgMore);
+                    DOM.currImageElement(null, imgMore, "rightImage", condition);
                     more.style.display = "block";
                     high.textContent = `High: ${day.tempmax}`;
                     low.textContent = `Low: ${day.tempmin}`;
@@ -242,7 +228,7 @@ function data() {
                     humidityDays.textContent = `Humidity: ${day.humidity}%`;
                     precipprobDays.textContent = `Rain: ${day.precipprob}%`;
                     sunRise.textContent = `Sunrise: ${day.sunrise}`;
-                    sunSet.textContent = `Sunset: ${day.sunset}`;      
+                    sunSet.textContent = `Sunset: ${day.sunset}`;
                 });
 
                 const close = document.querySelector(".close"); 
@@ -256,8 +242,9 @@ function data() {
                 name.textContent = city;
                 currentH3.textContent = "Current";
             });
-        }         
+        } 
 
+    // Clears data 
     const deleteChild = (container) => {
         let child = container.firstElementChild;
         while (child) {
@@ -272,8 +259,8 @@ function data() {
         if (searchTerm) {
             more.style.display = "none";
             deleteChild(currImage);
+            deleteChild(currrentCon);
             deleteChild(dataContainer);
-            deleteChild(currrentCon);;
             fetchWeather(searchTerm, currentDegreeType);
         }
     });
@@ -284,13 +271,15 @@ function data() {
         celsiusBtn.style.color = "black";
         fahrenheitBtn.style.backgroundColor = "black";
         fahrenheitBtn.style.color = "white";
-    })
-    celsiusBtn.addEventListener("click", () => {
+    });
+    
+    celsiusBtn.addEventListener("click", () => { 
         changeDegreeType("uk");
         celsiusBtn.style.backgroundColor = "black";
         celsiusBtn.style.color = "white";
         fahrenheitBtn.style.backgroundColor = "lightgray";
         fahrenheitBtn.style.color = "black";
+    
     });
     
 

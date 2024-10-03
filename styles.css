@@ -20,9 +20,7 @@ body {
     min-width: 500px;
 }
 .container {
-    /*height: 100%;*/
     margin: 1em;
-    /*display: grid;*/
 }
 
 .data-container {
@@ -114,7 +112,7 @@ body {
 .more-content {
     background-color: rgb(118, 176, 223);
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 .more-title h3 {
